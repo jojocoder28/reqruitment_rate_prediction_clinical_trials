@@ -206,7 +206,9 @@ if page == "Method 2 - LightGBM":
 # Method 2 - LightGBM Prediction
 elif page == "Method 1 - LightGBM (PCA 2x2)":
     st.header('Study Recruitment Rate Prediction - Method 1')
-
+    st.markdown(
+    '<p style="color: white; background-color: red; padding: 10px; font-size: 16px; font-weight: bold;">⚠️ WARNING: This method is unreliable! Use Method 2 for accurate results! ⚠️</p>',
+    unsafe_allow_html=True)
     # Form for user inputs for Method 1
     with st.form(key='user_input_form'):
         allocation_options = data['Allocation'].dropna().unique()
