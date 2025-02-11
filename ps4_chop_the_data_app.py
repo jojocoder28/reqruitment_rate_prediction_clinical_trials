@@ -70,7 +70,17 @@ def preprocess_data(data, label_encoders, mlb_conditions, mlb_interventions, pca
     # Transform categorical columns using the fitted LabelEncoders
     categorical_columns = data.select_dtypes(include=['object']).columns
     for col in categorical_columns:
-        data[col] = label_encoders[col].transform(data[col].astype(str))  # Transform with the fitted encoder
+                if col in label_encoders:
+                    le = label_encoders[col]
+                    le_classes = set(le.classes_)
+                    new_classes = set(data[col].unique()) - le_classes
+
+                    if new_classes:
+                        le.classes_ = np.append(le.classes_, list(new_classes))
+
+                    data[col] = le.transform(data[col])
+                else:
+                    st.warning(f"Warning: Column '{col}' was not present in the original data and cannot be encoded.")  # Transform with the fitted encoder
 
     # Standardize numeric columns
     scaler = StandardScaler()
