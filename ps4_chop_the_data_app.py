@@ -20,7 +20,6 @@ pca_interventions_method1 = load('pca_interventions.pkl')
 data = pd.read_excel("./usecase_4_.xlsx")
 
 
-
 model = load('lightgbm_model_method1_2x2.joblib')
 label_encoders = load('label_encoders_method1_2x2.pkl')
 mlb_conditions = load('mlb_conditions.pkl')
@@ -28,7 +27,6 @@ mlb_interventions = load('mlb_interventions.pkl')
 pca_conditions = load('pca_conditions.pkl')
 pca_interventions = load('pca_interventions.pkl')
 
-# Load your dataset for input options
 
 # Feature engineering function
 def feature_engineering(data):
@@ -142,7 +140,7 @@ if page == "Method 2 - LightGBM":
         enrollment = st.number_input('Enrollment', min_value=1, max_value=10000, step=1)
         funder_type = st.selectbox('Funder Type', funder_type_options)
         study_type = st.selectbox('Study Type', study_type_options)
-        locations = st.text_input('Locations')
+        locations = st.multiselect('Locations', data['Locations'].str.split('|').explode().unique())
         study_duration = st.number_input('Study Duration (days)', min_value=1, max_value=10000, step=1)
         allocation = st.selectbox('Allocation', allocation_options)
         intervention_model = st.selectbox('Intervention Model', intervention_model_options)
@@ -165,7 +163,7 @@ if page == "Method 2 - LightGBM":
             'Enrollment': [enrollment],
             'Funder Type': [funder_type],
             'Study Type': [study_type],
-            'Locations': [locations],
+            'Locations': ['|'.join(locations)],
             'Study_Duration': [study_duration],
             'Allocation': [allocation],
             'Intervention Model': [intervention_model],
@@ -209,6 +207,7 @@ elif page == "Method 1 - LightGBM (PCA 2x2)":
     st.markdown(
     '<p style="color: white; background-color: red; padding: 10px; font-size: 16px; font-weight: bold;">⚠️ WARNING: This method is unreliable! Use Method 2 for accurate results! ⚠️</p>',
     unsafe_allow_html=True)
+
     # Form for user inputs for Method 1
     with st.form(key='user_input_form'):
         allocation_options = data['Allocation'].dropna().unique()
@@ -224,7 +223,8 @@ elif page == "Method 1 - LightGBM (PCA 2x2)":
         enrollment = st.number_input('Enrollment', min_value=0, max_value=10000, value=100, step=1)
         funder_type = st.selectbox('Funder Type', data['Funder Type'].unique())
         study_type = st.selectbox('Study Type', data['Study Type'].unique())
-        locations = st.selectbox('Locations', data['Locations'].unique())
+        # locations = st.selectbox('Locations', data['Locations'].unique())
+        locations = st.multiselect('Locations', data['Locations'].str.split('|').explode().unique())
         study_duration = st.number_input('Study Duration (Days)', min_value=1, max_value=10000, value=100, step=1)
         allocation = st.selectbox('Allocation', allocation_options)
         intervention_model = st.selectbox('Intervention Model', intervention_model_options)
@@ -249,7 +249,7 @@ elif page == "Method 1 - LightGBM (PCA 2x2)":
             'Enrollment': [enrollment],
             'Funder Type': [funder_type],
             'Study Type': [study_type],
-            'Locations': [locations],
+            'Locations': ['|'.join(locations)],
             'Study_Duration': [study_duration],
             'Allocation': [allocation],
             'Intervention Model': [intervention_model],
