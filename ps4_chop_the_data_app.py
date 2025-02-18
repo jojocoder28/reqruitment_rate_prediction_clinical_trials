@@ -116,7 +116,7 @@ data['Masking'] = study_design_split[3]
 data = data.drop(columns=['Study Design'])
 
 # Streamlit app interface
-st.title('Recruitment Rate Prediction App')
+st.title('TrialFast AI by Chop The Data')
 
 # Sidebar for page navigation
 page = st.sidebar.radio("Select a page", ["Method 1 - LightGBM (PCA 2x2)", "Method 2 - LightGBM"])
